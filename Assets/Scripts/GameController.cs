@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
 
         GameObject newThreat;
         threats.Add(newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion()));
+        //из контроллера идет обращение к лимфоузлу и вызывается метод создания пути до угрозы
         lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
     }
 

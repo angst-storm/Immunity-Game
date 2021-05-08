@@ -15,6 +15,7 @@ public class PathData
     public Vector2 EndPoint { get; }
     public List<Vector2> PathsPoints { get; }
 
+    //вот этот метод надо расширить чтоб он создавал путь поинтереснее
     private IEnumerable<Vector2> CreateExclusiveForm(Vector2 startPoint, Vector2 endPoint)
     {
         return new[] {startPoint, endPoint};
