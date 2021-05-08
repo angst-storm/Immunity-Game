@@ -4,6 +4,7 @@ using UnityEngine;
 public class Lymphnode : MonoBehaviour
 {
     public GameObject pathPrefab;
+    public int healthPoints;
 
     public void BuildPath(GameObject threat)
     {

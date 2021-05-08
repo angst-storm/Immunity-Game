@@ -5,26 +5,36 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    //public int gamePoints;
-    //public int winPointsCount;
-    //public int proteinCount;
+    public int winPointsCount;
+    public int proteinCount;
     public GameObject threatPrefab;
     public GameObject lymphnode;
     public float minThreatsDistance;
     public int maxThreatsCount;
+    public float timeToThreatSpawn;
     private readonly List<GameObject> threats = new List<GameObject>();
     private readonly List<int> threatsWithAntiBodiesCodes = new List<int>();
     private SizeF fieldSize;
+    private float millisecondsToSpawn;
+    public int GamePoints { get; set; }
+    public GameObject ActiveThreat { get; set; }
 
     private void Start()
     {
         var fieldHorizontalRadius = Camera.main.orthographicSize;
-        fieldSize = new SizeF((int) (fieldHorizontalRadius * 1.5 * 2), (int) (fieldHorizontalRadius * 2));
+        fieldSize = new SizeF((int) (fieldHorizontalRadius * 1.8 * 2), (int) (fieldHorizontalRadius * 2));
+        millisecondsToSpawn = timeToThreatSpawn;
     }
 
     private void Update()
     {
-        if (threats.Count < maxThreatsCount && Input.GetKeyDown(KeyCode.Space)) SpawnThreat();
+        if (millisecondsToSpawn > 0)
+            millisecondsToSpawn -= Time.deltaTime;
+        if ((millisecondsToSpawn <= 0 || threats.Count == 0) && threats.Count < maxThreatsCount)
+        {
+            millisecondsToSpawn = timeToThreatSpawn;
+            SpawnThreat();
+        }
     }
 
     private void SpawnThreat()
