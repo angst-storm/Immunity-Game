@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public GameObject threatPrefab;
     public GameObject lymphnode;
     public float minThreatsDistance;
+    public int maxThreatsCount;
     private readonly List<GameObject> threats = new List<GameObject>();
     private readonly List<int> threatsWithAntiBodiesCodes = new List<int>();
     private SizeF fieldSize;
@@ -23,13 +24,12 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) SpawnThreat();
+        if (threats.Count < maxThreatsCount && Input.GetKeyDown(KeyCode.Space)) SpawnThreat();
     }
 
     private void SpawnThreat()
     {
-        var spawnPoint = new Vector2(Random.Range(-fieldSize.Width / 2 + 1, fieldSize.Width / 2 - 1),
-            Random.Range(-fieldSize.Height / 2 + 1, fieldSize.Height / 2 - 1));
+        var spawnPoint = new Vector2();
         while (!SuitableSpawnPoint(spawnPoint))
             spawnPoint = new Vector2(Random.Range(-fieldSize.Width / 2 + 1, fieldSize.Width / 2 - 1),
                 Random.Range(-fieldSize.Height / 2 + 1, fieldSize.Height / 2 - 1));

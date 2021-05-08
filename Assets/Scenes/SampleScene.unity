@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 039bb0f0bc6e6c042ae6170d1b919bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathPrefab: {fileID: 0}
+  pathPrefab: {fileID: 6131515509430902005, guid: 7d9899f34d8bf3e4893119cf1c2ed1dd, type: 3}
 --- !u!212 &4529338
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 3391d6c8bac1a4c45a859cba9617a3b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -345,6 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea089cc4af67840439752989e83a2d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threatPrefab: {fileID: 0}
-  lymphnode: {fileID: 0}
-  manThreatsDistance: 0
+  threatPrefab: {fileID: 8943359155306156704, guid: 1b176dc9afb1d0c428840a8b2d510a87, type: 3}
+  lymphnode: {fileID: 4529336}
+  minThreatsDistance: 2
+  maxThreatsCount: 5
