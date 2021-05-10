@@ -11,7 +11,9 @@ public class Lymphnode : MonoBehaviour
         var thisPosition = transform.position;
         var pathData = new PathData(thisPosition, threat.transform.position);
         threat.GetComponent<Threat>().PathData = pathData;
-        threat.GetComponent<LineRenderer>().SetPositions(pathData.PathsPoints.Select(v => (Vector3) v).ToArray());
+        var lineRenderer = threat.GetComponent<LineRenderer>();
+        lineRenderer.positionCount = pathData.PathsPoints.Count;
+        lineRenderer.SetPositions(pathData.PathsPoints.Select(v => (Vector3) v).ToArray());
     }
 
     public void SendUnit(int unitNumber)
