@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitScript : MonoBehaviour
 {
-    public static Dictionary<UnitSpecies, UnitData> UnitsCharacteristics = new Dictionary<UnitSpecies, UnitData>
+    public static readonly Dictionary<UnitSpecies, UnitData> UnitsCharacteristics = new Dictionary<UnitSpecies, UnitData>
     {
         {UnitSpecies.Macrophage, new UnitData(UnitSpecies.Macrophage, 1, 1, 5, 1)},
         {UnitSpecies.DendriticCell, new UnitData(UnitSpecies.DendriticCell, 1, 1, 5, 1)},
@@ -27,6 +27,7 @@ public class UnitScript : MonoBehaviour
     private void Update()
     {
         if (!initialized) return;
+        
         if (((Vector2) transform.position - currentTarget).magnitude <= 1e-9)
         {
             if (path.MoveNext()) currentTarget = path.Current;

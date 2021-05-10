@@ -5,7 +5,8 @@ public class Threat : MonoBehaviour
 {
     //ссылки на префабы и спрайты
     public GameObject typePrefab;
-    public GameObject barPrefab;
+    public Transform healthBar;
+    public Transform antibodyBar;
     public Sprite wound;
     public Sprite virus;
     public Sprite cancer;
@@ -17,10 +18,24 @@ public class Threat : MonoBehaviour
     public PathData PathData { get; set; }
     public int HealthPoints { get; set; }
     public int AntiBodiesPoints { get; set; }
+    private int allAntiBodiesPoints;
+    private int allHealthPoints;
+    private bool initialized;
 
     //информация о игре
     public GameController Controller { get; set; }
 
+    private void Update()
+    {
+        if (initialized)
+        {
+            healthBar.localScale = new Vector3((float) HealthPoints / allHealthPoints, 1, 1);
+            if (AntiBodiesPoints >= 0)
+                antibodyBar.localScale = new Vector3((float) AntiBodiesPoints / allAntiBodiesPoints, 1, 1);
+        }
+
+        if (HealthPoints == 0) Controller.ThreatDeath(gameObject);
+    }
 
     private void OnMouseDown()
     {
@@ -38,11 +53,15 @@ public class Threat : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = defaultSprite;
     }
 
-    public void ThreatInitialize(ThreatData data, int allHealthPoints, int allAntibodiesPoints)
+    public void ThreatInitialize(ThreatData data, int healthPoints, int antiBodies)
     {
         ThreatData = data;
-        HealthPoints = allHealthPoints;
-        AntiBodiesPoints = allAntibodiesPoints;
+        
+        allHealthPoints = healthPoints;
+        allAntiBodiesPoints = antiBodies;
+        HealthPoints = healthPoints;
+        AntiBodiesPoints = antiBodies;
+        
         Instantiate(typePrefab, transform).GetComponent<SpriteRenderer>().sprite =
             data.Type switch
             {
@@ -51,5 +70,7 @@ public class Threat : MonoBehaviour
                 ThreatType.Cancer => cancer,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        
+        initialized = true;
     }
 }
