@@ -9,6 +9,8 @@ public class Threat : MonoBehaviour
     public Sprite wound;
     public Sprite virus;
     public Sprite cancer;
+    public Sprite defaultSprite;
+    public Sprite activeSprite;
 
     //информация о угрозе
     public ThreatData ThreatData { get; set; }
@@ -22,8 +24,18 @@ public class Threat : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Controller.Threats.Remove(gameObject);
-        Destroy(gameObject);
+        ActivateThreat();
+    }
+
+    private void ActivateThreat()
+    {
+        Controller.ActivateThreat(gameObject);
+        GetComponent<SpriteRenderer>().sprite = activeSprite;
+    }
+
+    public void DeactivateThreat()
+    {
+        GetComponent<SpriteRenderer>().sprite = defaultSprite;
     }
 
     public void ThreatInitialize(ThreatData data, int allHealthPoints, int allAntibodiesPoints)

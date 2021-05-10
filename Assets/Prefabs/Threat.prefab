@@ -102,6 +102,8 @@ MonoBehaviour:
   wound: {fileID: 21300000, guid: 9cd3f9a2a257bc246be06c3999eb0a2f, type: 3}
   virus: {fileID: 21300000, guid: 106474f3b56d85c49ab733a17ca70e72, type: 3}
   cancer: {fileID: 21300000, guid: 24aa97735f3a0e84fa0038da3199cf26, type: 3}
+  defaultSprite: {fileID: 21300000, guid: cfef830ef12ec8244aa2a865f0471ac5, type: 3}
+  activeSprite: {fileID: 21300000, guid: dee855e36c114ae4fb5ac2c9c4e81fbd, type: 3}
 --- !u!61 &3242771083349520790
 BoxCollider2D:
   m_ObjectHideFlags: 0

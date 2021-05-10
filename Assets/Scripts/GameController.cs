@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class GameController : MonoBehaviour
 
     //ссылки на другие объекты
     public GameObject lymphnode;
+    public Text proteinCountText;
     public GameObject ActiveThreat { get; set; }
     public List<GameObject> Threats { get; } = new List<GameObject>();
 
@@ -35,13 +38,17 @@ public class GameController : MonoBehaviour
         millisecondsToSpawn = timeToThreatSpawn;
         GamePoints = 0;
         ProteinPoints = startProteinCount;
+        SpawnThreat();
+        ActiveThreat = Threats.FirstOrDefault();
     }
 
     private void Update()
     {
+        proteinCountText.text = ProteinPoints.ToString();
+
         if (millisecondsToSpawn > 0)
             millisecondsToSpawn -= Time.deltaTime;
-        if ((millisecondsToSpawn <= 0 || Threats.Count == 0) && Threats.Count < maxThreatsCount)
+        if (millisecondsToSpawn <= 0 && Threats.Count < maxThreatsCount)
         {
             millisecondsToSpawn = timeToThreatSpawn;
             SpawnThreat();
@@ -81,5 +88,19 @@ public class GameController : MonoBehaviour
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
+    }
+
+    public void ThreatDeath(GameObject threat)
+    {
+        Threats.Remove(threat);
+        if (ActiveThreat == threat)
+            ActiveThreat = null;
+        Destroy(threat);
+    }
+
+    public void ActivateThreat(GameObject threat)
+    {
+        ActiveThreat.GetComponent<Threat>().DeactivateThreat();
+        ActiveThreat = threat;
     }
 }
