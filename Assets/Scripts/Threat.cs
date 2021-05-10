@@ -3,29 +3,35 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour
 {
+    //ссылки на префабы и спрайты
+    public GameObject typePrefab;
     public GameObject barPrefab;
-    public Sprite cancer;
-    public GameObject typeSprite;
-    public Sprite virus;
     public Sprite wound;
-    public GameController Controller { get; set; }
-    public ThreatData threatData { get; set; }
+    public Sprite virus;
+    public Sprite cancer;
+
+    //информация о угрозе
+    public ThreatData ThreatData { get; set; }
+    public PathData PathData { get; set; }
     public int HealthPoints { get; set; }
     public int AntiBodiesPoints { get; set; }
 
+    //информация о игре
+    public GameController Controller { get; set; }
+
+
     private void OnMouseDown()
     {
-        print(gameObject + " я тут");
-        Controller.ThreatDeath(gameObject);
+        Controller.Threats.Remove(gameObject);
         Destroy(gameObject);
     }
 
     public void ThreatInitialize(ThreatData data, int allHealthPoints, int allAntibodiesPoints)
     {
-        threatData = data;
+        ThreatData = data;
         HealthPoints = allHealthPoints;
         AntiBodiesPoints = allAntibodiesPoints;
-        Instantiate(typeSprite, transform).GetComponent<SpriteRenderer>().sprite =
+        Instantiate(typePrefab, transform).GetComponent<SpriteRenderer>().sprite =
             data.Type switch
             {
                 ThreatType.Wound => wound,

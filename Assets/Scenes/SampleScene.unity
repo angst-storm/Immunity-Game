@@ -153,8 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 039bb0f0bc6e6c042ae6170d1b919bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathPrefab: {fileID: 6131515509430902005, guid: 7d9899f34d8bf3e4893119cf1c2ed1dd, type: 3}
-  healthPoints: 0
 --- !u!212 &4529338
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -347,9 +345,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winPointsCount: 0
-  proteinCount: 0
-  threatPrefab: {fileID: 8943359155306156704, guid: 1b176dc9afb1d0c428840a8b2d510a87, type: 3}
-  lymphnode: {fileID: 4529336}
-  minThreatsDistance: 2
+  startProteinCount: 0
   maxThreatsCount: 5
+  minThreatsDistance: 2
   timeToThreatSpawn: 1
+  lymphnode: {fileID: 4529336}
+  threatPrefab: {fileID: 8943359155306156704, guid: 1b176dc9afb1d0c428840a8b2d510a87, type: 3}
