@@ -39,7 +39,6 @@ public class GameController : MonoBehaviour
         GamePoints = 0;
         ProteinPoints = startProteinCount;
         SpawnThreat();
-        ActiveThreat = Threats.FirstOrDefault();
     }
 
     private void Update()
@@ -100,7 +99,8 @@ public class GameController : MonoBehaviour
 
     public void ActivateThreat(GameObject threat)
     {
-        ActiveThreat.GetComponent<Threat>().DeactivateThreat();
+        if (ActiveThreat != null)
+            ActiveThreat.GetComponent<Threat>().DeactivateThreat();
         ActiveThreat = threat;
     }
 }

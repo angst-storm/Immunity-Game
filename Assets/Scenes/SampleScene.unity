@@ -1121,7 +1121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1790,16 +1790,16 @@ RectTransform:
   m_GameObject: {fileID: 1744003746}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children:
   - {fileID: 1965209278}
   - {fileID: 1408485075}
   m_Father: {fileID: 884777941}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 300, y: 0}
   m_SizeDelta: {x: 265, y: 713}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1744003748
@@ -2251,7 +2251,7 @@ MonoBehaviour:
   timeToThreatSpawn: 1
   lymphnode: {fileID: 4529336}
   proteinCountText: {fileID: 373207858}
-  threatPrefab: {fileID: 8943359155306156704, guid: 1b176dc9afb1d0c428840a8b2d510a87, type: 3}
+  threatPrefab: {fileID: 4308581511132130697, guid: 81117eba8998f164b995d758a1606d75, type: 3}
 --- !u!1 &1965209277
 GameObject:
   m_ObjectHideFlags: 0
