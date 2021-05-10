@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         var fieldHorizontalRadius = Camera.main.orthographicSize;
-        fieldSize = new SizeF((int) (fieldHorizontalRadius * 1.8 * 2), (int) (fieldHorizontalRadius * 2));
+        fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
         millisecondsToSpawn = timeToThreatSpawn;
     }
 
@@ -46,7 +46,8 @@ public class GameController : MonoBehaviour
 
         GameObject newThreat;
         threats.Add(newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion()));
-        //из контроллера идет обращение к лимфоузлу и вызывается метод создания пути до угрозы
+        newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
+        newThreat.GetComponent<Threat>().ThreatInitialize(new ThreatData(), 5, 5);
         lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
     }
 
@@ -56,5 +57,10 @@ public class GameController : MonoBehaviour
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
+    }
+
+    public void ThreatDeath(GameObject threat)
+    {
+        threats.Remove(threat);
     }
 }

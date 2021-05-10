@@ -25,7 +25,7 @@ public class ThreatData
 
     public ThreatData()
     {
-        var data = ThreatsDictionary.Skip(Random.Range(0, ThreatsDictionary.Count - 1)).First();
+        var data = ThreatsDictionary.Skip(Random.Range(0, ThreatsDictionary.Count)).First();
         Code = data.Key;
         CodeName = data.Value.Item1;
         Type = data.Value.Item2;
