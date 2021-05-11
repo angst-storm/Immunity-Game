@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class UnitScript : MonoBehaviour
 {
-    public static readonly Dictionary<UnitSpecies, UnitData> UnitsCharacteristics = new Dictionary<UnitSpecies, UnitData>
-    {
-        {UnitSpecies.Macrophage, new UnitData(UnitSpecies.Macrophage, 1, 1, 5, 1)},
-        {UnitSpecies.DendriticCell, new UnitData(UnitSpecies.DendriticCell, 1, 1, 5, 1)},
-        {UnitSpecies.Neutrophil, new UnitData(UnitSpecies.Neutrophil, 1, 1, 5, 1)},
-        {UnitSpecies.NKCell, new UnitData(UnitSpecies.NKCell, 1, 1, 5, 1)},
-        {UnitSpecies.TKiller, new UnitData(UnitSpecies.TKiller, 1, 1, 5, 1)}
-    };
+    public static readonly Dictionary<UnitSpecies, UnitData> UnitsCharacteristics =
+        new Dictionary<UnitSpecies, UnitData>
+        {
+            {UnitSpecies.Macrophage, new UnitData(UnitSpecies.Macrophage, 1, 1, 5, 1)},
+            {UnitSpecies.DendriticCell, new UnitData(UnitSpecies.DendriticCell, 1, 1, 5, 1)},
+            {UnitSpecies.Neutrophil, new UnitData(UnitSpecies.Neutrophil, 1, 1, 5, 1)},
+            {UnitSpecies.NKCell, new UnitData(UnitSpecies.NKCell, 1, 1, 5, 1)},
+            {UnitSpecies.TKiller, new UnitData(UnitSpecies.TKiller, 1, 1, 5, 1)}
+        };
 
     public Sprite macrophageSprite;
     public Sprite dendriticCellSprite;
@@ -27,7 +28,7 @@ public class UnitScript : MonoBehaviour
     private void Update()
     {
         if (!initialized) return;
-        
+
         if (((Vector2) transform.position - currentTarget).magnitude <= 1e-9)
         {
             if (path.MoveNext()) currentTarget = path.Current;
@@ -42,8 +43,10 @@ public class UnitScript : MonoBehaviour
 
     private void ThreatReached()
     {
-        targetThreat.GetComponent<Threat>().HealthPoints -= UnitData.LifeDamage;
-        targetThreat.GetComponent<Threat>().AntiBodiesPoints -= UnitData.AntiBodyDamage;
+        var threatScript = targetThreat.GetComponent<Threat>();
+        threatScript.HealthPoints -= UnitData.LifeDamage;
+        threatScript.AntiBodiesPoints -= UnitData.AntiBodyDamage;
+        threatScript.AttackUnits.Remove(gameObject);
         Destroy(gameObject);
     }
 
@@ -61,7 +64,9 @@ public class UnitScript : MonoBehaviour
         };
         UnitData = UnitsCharacteristics[unit];
         targetThreat = threat;
-        path = threat.GetComponent<Threat>().PathData.PathsPoints.GetEnumerator();
+        var threatScript = targetThreat.GetComponent<Threat>();
+        threatScript.AttackUnits.Add(gameObject);
+        path = threatScript.PathData.PathsPoints.GetEnumerator();
         if (path.MoveNext())
             currentTarget = path.Current;
         initialized = true;

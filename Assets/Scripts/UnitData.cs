@@ -22,6 +22,5 @@ public class UnitData
     public int LifeDamage { get; set; }
     public int AntiBodyDamage { get; set; }
     public int Speed { get; set; }
-
     public int Cost { get; set; }
 }

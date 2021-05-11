@@ -22,7 +22,7 @@ public class PathData
             },
             new List<Vector2>
             {
-                start, new Vector2(end.y, Math.Min(start.y, end.y) + Math.Abs(start.y - end.y) / 2), end
+                start, new Vector2(end.x, Math.Min(start.y, end.y) + Math.Abs(start.y - end.y) / 2), end
             },
             new List<Vector2>
             {

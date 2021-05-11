@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Threat : MonoBehaviour
@@ -17,13 +18,16 @@ public class Threat : MonoBehaviour
     public ThreatData ThreatData { get; set; }
     public PathData PathData { get; set; }
     public int HealthPoints { get; set; }
+
     public int AntiBodiesPoints { get; set; }
     private int allAntiBodiesPoints;
     private int allHealthPoints;
     private bool initialized;
 
     //информация о игре
+
     public GameController Controller { get; set; }
+    public List<GameObject> AttackUnits { get; } = new List<GameObject>();
 
     private void Update()
     {
@@ -34,7 +38,12 @@ public class Threat : MonoBehaviour
                 antibodyBar.localScale = new Vector3((float) AntiBodiesPoints / allAntiBodiesPoints, 1, 1);
         }
 
-        if (HealthPoints == 0) Controller.ThreatDeath(gameObject);
+        if (HealthPoints == 0)
+        {
+            foreach (var unit in AttackUnits)
+                Destroy(unit);
+            Controller.ThreatDeath(gameObject);
+        }
     }
 
     private void OnMouseDown()
@@ -56,12 +65,12 @@ public class Threat : MonoBehaviour
     public void ThreatInitialize(ThreatData data, int healthPoints, int antiBodies)
     {
         ThreatData = data;
-        
+
         allHealthPoints = healthPoints;
         allAntiBodiesPoints = antiBodies;
         HealthPoints = healthPoints;
         AntiBodiesPoints = antiBodies;
-        
+
         Instantiate(typePrefab, transform).GetComponent<SpriteRenderer>().sprite =
             data.Type switch
             {
@@ -70,7 +79,7 @@ public class Threat : MonoBehaviour
                 ThreatType.Cancer => cancer,
                 _ => throw new ArgumentOutOfRangeException()
             };
-        
+
         initialized = true;
     }
 }
