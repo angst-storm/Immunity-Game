@@ -11,7 +11,7 @@ public enum ThreatType
 
 public class ThreatData
 {
-    public static readonly Dictionary<int, (string, ThreatType)> ThreatsDictionary =
+    private static readonly Dictionary<int, (string, ThreatType)> ThreatsDictionary =
         new Dictionary<int, (string, ThreatType)>
         {
             {0, ("Повреждение кожи", ThreatType.Wound)},

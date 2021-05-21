@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
@@ -14,20 +16,26 @@ public class GameController : MonoBehaviour
     public GameObject threatPrefab;
     public int timeToProteinIncrement = 1;
     public int timeToThreatSpawn = 1;
+    public int startThreatDifficult = 1;
+    private readonly Func<int, int> difficultyCurve = i => 5 * i;
     private readonly List<GameObject> threats = new List<GameObject>();
     private SizeF fieldSize;
     private int proteinIncrementCounter;
+    private IEnumerator<int> threatDifficult;
     private int threatSpawnCounter;
     public List<int> ThreatsWithAntiBodiesCodes { get; } = new List<int>();
     public GameObject ActiveThreat { get; private set; }
     public int ProteinPoints { get; set; }
-    
+
     private void Start()
     {
         {
+            if (Camera.main == null) throw new NullReferenceException();
             var fieldHorizontalRadius = Camera.main.orthographicSize;
             fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
         }
+        
+        threatDifficult = GetThreatDifficult(startThreatDifficult);
 
         threatSpawnCounter = timeToThreatSpawn;
         ProteinPoints = startProteinCount;
@@ -97,8 +105,10 @@ public class GameController : MonoBehaviour
             threats.Add(newThreat);
             newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
             var newData = new ThreatData();
+            threatDifficult.MoveNext();
             newThreat.GetComponent<Threat>()
-                .ThreatInitialize(newData, 5, 5, ThreatsWithAntiBodiesCodes.Contains(newData.Code));
+                .ThreatInitialize(newData, threatDifficult.Current, threatDifficult.Current,
+                    ThreatsWithAntiBodiesCodes.Contains(newData.Code));
             lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
         }
     }
@@ -123,6 +133,18 @@ public class GameController : MonoBehaviour
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
+    }
+
+
+    private IEnumerator<int> GetThreatDifficult(int startDifficult)
+    {
+        var difficult = startDifficult;
+        while (true)
+        {
+            yield return difficultyCurve(difficult);
+            difficult++;
+            if (difficult == int.MaxValue) yield break;
+        }
     }
 
     #endregion

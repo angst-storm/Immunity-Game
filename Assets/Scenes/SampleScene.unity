@@ -2244,14 +2244,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea089cc4af67840439752989e83a2d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winPointsCount: 0
   startProteinCount: 100
   maxThreatsCount: 5
   minThreatsDistance: 2
-  timeToThreatSpawn: 1
   lymphnode: {fileID: 4529336}
   proteinCountText: {fileID: 1409130221}
   threatPrefab: {fileID: 4308581511132130697, guid: 81117eba8998f164b995d758a1606d75, type: 3}
+  timeToProteinIncrement: 1
+  timeToThreatSpawn: 1
+  startThreatDifficult: 1
 --- !u!1 &1965209277
 GameObject:
   m_ObjectHideFlags: 0

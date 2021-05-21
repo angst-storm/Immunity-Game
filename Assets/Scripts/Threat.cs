@@ -20,7 +20,7 @@ public class Threat : MonoBehaviour
     private int healthPoints;
     private bool initialized;
 
-    public bool WithAntiBodies { get; set; }
+    public bool WithAntiBodies { get; private set; }
     private ThreatData ThreatData { get; set; }
     public PathData PathData { get; set; }
 
@@ -94,7 +94,7 @@ public class Threat : MonoBehaviour
         allHealthPoints = startHealthPoints;
         allAntiBodiesPoints = startAntiBodiesPoints;
         HealthPoints = startHealthPoints;
-        AntiBodiesPoints = !withAntiBodies ? startAntiBodiesPoints : 0;
+        AntiBodiesPoints = !WithAntiBodies ? startAntiBodiesPoints : 0;
 
         Instantiate(typePrefab, transform).GetComponent<SpriteRenderer>().sprite =
             ThreatData.Type switch
