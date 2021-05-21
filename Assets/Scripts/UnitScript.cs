@@ -7,11 +7,11 @@ public class UnitScript : MonoBehaviour
     public static readonly Dictionary<UnitSpecies, UnitData> UnitsCharacteristics =
         new Dictionary<UnitSpecies, UnitData>
         {
-            {UnitSpecies.Macrophage, new UnitData(UnitSpecies.Macrophage, 1, 1, 5, 1)},
-            {UnitSpecies.DendriticCell, new UnitData(UnitSpecies.DendriticCell, 1, 1, 5, 1)},
-            {UnitSpecies.Neutrophil, new UnitData(UnitSpecies.Neutrophil, 1, 1, 5, 1)},
-            {UnitSpecies.NKCell, new UnitData(UnitSpecies.NKCell, 1, 1, 5, 1)},
-            {UnitSpecies.TKiller, new UnitData(UnitSpecies.TKiller, 1, 1, 5, 1)}
+            {UnitSpecies.Macrophage, new UnitData(UnitSpecies.Macrophage, 0, 3, 7, 1)},
+            {UnitSpecies.DendriticCell, new UnitData(UnitSpecies.DendriticCell, 0, 5, 5, 2)},
+            {UnitSpecies.Neutrophil, new UnitData(UnitSpecies.Neutrophil, 3, 0, 7, 1)},
+            {UnitSpecies.NKCell, new UnitData(UnitSpecies.NKCell, 5, 0, 5, 2)},
+            {UnitSpecies.TKiller, new UnitData(UnitSpecies.TKiller, 10, 0, 5, 1)}
         };
 
     public Sprite macrophageSprite;

@@ -20,7 +20,10 @@ public class Lymphnode : MonoBehaviour
     {
         var unit = (UnitSpecies) unitNumber;
         var controllerScript = controller.GetComponent<GameController>();
-        if (controllerScript.ActiveThreat != null && controllerScript.ProteinPoints - UnitScript.UnitsCharacteristics[unit].Cost >= 0)
+        if (controllerScript.ActiveThreat == null) return;
+        var threatScript = controllerScript.ActiveThreat.GetComponent<Threat>();
+        if (unit == UnitSpecies.TKiller && !threatScript.WithAntiBodies) return;
+        if (controllerScript.ProteinPoints - UnitScript.UnitsCharacteristics[unit].Cost >= 0)
         {
             Instantiate(unitPrefab, transform.position, new Quaternion()).GetComponent<UnitScript>()
                 .Initialize((UnitSpecies) unitNumber, controllerScript.ActiveThreat);

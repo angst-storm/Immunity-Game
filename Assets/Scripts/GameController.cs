@@ -3,56 +3,90 @@ using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
-    //настройки игры
-    public int winPointsCount;
     public int startProteinCount;
     public int maxThreatsCount = 5;
     public float minThreatsDistance = 2;
-    public float timeToThreatSpawn = 1;
-
-    //ссылки на другие объекты
     public GameObject lymphnode;
     public Text proteinCountText;
-    public GameObject ActiveThreat { get; set; }
-    public List<GameObject> Threats { get; } = new List<GameObject>();
-
-    //префабы
     public GameObject threatPrefab;
-
-    //поля, хранящие информацию о игре
-    private readonly List<int> threatsWithAntiBodiesCodes = new List<int>();
+    public int timeToProteinIncrement = 1;
+    public int timeToThreatSpawn = 1;
+    private readonly List<GameObject> threats = new List<GameObject>();
     private SizeF fieldSize;
-    private float millisecondsToSpawn;
-    public int GamePoints { get; set; }
+    private int proteinIncrementCounter;
+    private int threatSpawnCounter;
+    public List<int> ThreatsWithAntiBodiesCodes { get; } = new List<int>();
+    public GameObject ActiveThreat { get; private set; }
     public int ProteinPoints { get; set; }
-
-
+    
     private void Start()
     {
-        var fieldHorizontalRadius = Camera.main.orthographicSize;
-        fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
-        millisecondsToSpawn = timeToThreatSpawn;
-        GamePoints = 0;
+        {
+            var fieldHorizontalRadius = Camera.main.orthographicSize;
+            fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
+        }
+
+        threatSpawnCounter = timeToThreatSpawn;
         ProteinPoints = startProteinCount;
-        SpawnThreat();
+        InvokeRepeating(nameof(TimerTick), 0, 1);
     }
 
     private void Update()
     {
         proteinCountText.text = ProteinPoints.ToString();
+    }
 
-        if (millisecondsToSpawn > 0)
-            millisecondsToSpawn -= Time.deltaTime;
-        if (millisecondsToSpawn <= 0 && Threats.Count < maxThreatsCount)
+    public void ThreatDeath(GameObject threat)
+    {
+        threats.Remove(threat);
+        if (ActiveThreat == threat)
+            ActiveThreat = null;
+        Destroy(threat);
+    }
+
+    public void ActivateThreat(GameObject threat)
+    {
+        if (ActiveThreat != null)
+            ActiveThreat.GetComponent<Threat>().DeactivateThreat();
+        ActiveThreat = threat;
+    }
+
+    #region TimerTick()
+
+    private void TimerTick()
+    {
+        ThreatSpawnControl();
+        ProteinIncrementControl();
+    }
+
+    private void ThreatSpawnControl()
+    {
+        if (threats.Count >= maxThreatsCount) return;
+
+        threatSpawnCounter++;
+        if (threatSpawnCounter >= timeToThreatSpawn)
         {
-            millisecondsToSpawn = timeToThreatSpawn;
+            threatSpawnCounter = 0;
             SpawnThreat();
         }
     }
+
+    private void ProteinIncrementControl()
+    {
+        proteinIncrementCounter++;
+        if (proteinIncrementCounter >= timeToProteinIncrement)
+        {
+            proteinIncrementCounter = 0;
+            ProteinPoints++;
+        }
+    }
+
+    #endregion
+
+    #region SpawnThreat()
 
     private void SpawnThreat()
     {
@@ -60,9 +94,11 @@ public class GameController : MonoBehaviour
         if (TryGetSpawnPoint(ref spawnPoint, 100))
         {
             var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
-            Threats.Add(newThreat);
+            threats.Add(newThreat);
             newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
-            newThreat.GetComponent<Threat>().ThreatInitialize(new ThreatData(), 5, 5);
+            var newData = new ThreatData();
+            newThreat.GetComponent<Threat>()
+                .ThreatInitialize(newData, 5, 5, ThreatsWithAntiBodiesCodes.Contains(newData.Code));
             lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
         }
     }
@@ -83,24 +119,11 @@ public class GameController : MonoBehaviour
 
     private bool IsSuitableSpawnPoint(Vector2 spawnPoint)
     {
-        return Threats
+        return threats
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
     }
 
-    public void ThreatDeath(GameObject threat)
-    {
-        Threats.Remove(threat);
-        if (ActiveThreat == threat)
-            ActiveThreat = null;
-        Destroy(threat);
-    }
-
-    public void ActivateThreat(GameObject threat)
-    {
-        if (ActiveThreat != null)
-            ActiveThreat.GetComponent<Threat>().DeactivateThreat();
-        ActiveThreat = threat;
-    }
+    #endregion
 }

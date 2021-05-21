@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour
 {
-    //ссылки на префабы и спрайты
     public GameObject typePrefab;
     public Transform healthBar;
     public Transform antibodyBar;
@@ -14,17 +13,36 @@ public class Threat : MonoBehaviour
     public Sprite defaultSprite;
     public Sprite activeSprite;
 
-    //информация о угрозе
-    public ThreatData ThreatData { get; set; }
-    public PathData PathData { get; set; }
-    public int HealthPoints { get; set; }
-
-    public int AntiBodiesPoints { get; set; }
     private int allAntiBodiesPoints;
     private int allHealthPoints;
+
+    private int antiBodiesPoints;
+    private int healthPoints;
     private bool initialized;
 
-    //информация о игре
+    public bool WithAntiBodies { get; set; }
+    private ThreatData ThreatData { get; set; }
+    public PathData PathData { get; set; }
+
+    public int HealthPoints
+    {
+        get => healthPoints;
+        set
+        {
+            if (value < 0) value = 0;
+            healthPoints = value;
+        }
+    }
+
+    public int AntiBodiesPoints
+    {
+        get => antiBodiesPoints;
+        set
+        {
+            if (value < 0) value = 0;
+            antiBodiesPoints = value;
+        }
+    }
 
     public GameController Controller { get; set; }
     public List<GameObject> AttackUnits { get; } = new List<GameObject>();
@@ -34,8 +52,13 @@ public class Threat : MonoBehaviour
         if (initialized)
         {
             healthBar.localScale = new Vector3((float) HealthPoints / allHealthPoints, 1, 1);
-            if (AntiBodiesPoints >= 0)
-                antibodyBar.localScale = new Vector3((float) AntiBodiesPoints / allAntiBodiesPoints, 1, 1);
+            antibodyBar.localScale = new Vector3((float) AntiBodiesPoints / allAntiBodiesPoints, 1, 1);
+        }
+
+        if (!WithAntiBodies && AntiBodiesPoints == 0)
+        {
+            WithAntiBodies = true;
+            Controller.ThreatsWithAntiBodiesCodes.Add(ThreatData.Code);
         }
 
         if (HealthPoints == 0)
@@ -62,17 +85,19 @@ public class Threat : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = defaultSprite;
     }
 
-    public void ThreatInitialize(ThreatData data, int healthPoints, int antiBodies)
+    public void ThreatInitialize(ThreatData data, int startHealthPoints, int startAntiBodiesPoints, bool withAntiBodies)
     {
         ThreatData = data;
 
-        allHealthPoints = healthPoints;
-        allAntiBodiesPoints = antiBodies;
-        HealthPoints = healthPoints;
-        AntiBodiesPoints = antiBodies;
+        WithAntiBodies = withAntiBodies;
+
+        allHealthPoints = startHealthPoints;
+        allAntiBodiesPoints = startAntiBodiesPoints;
+        HealthPoints = startHealthPoints;
+        AntiBodiesPoints = !withAntiBodies ? startAntiBodiesPoints : 0;
 
         Instantiate(typePrefab, transform).GetComponent<SpriteRenderer>().sprite =
-            data.Type switch
+            ThreatData.Type switch
             {
                 ThreatType.Wound => wound,
                 ThreatType.Virus => virus,
