@@ -15,17 +15,21 @@ public class GameController : MonoBehaviour
     public Text proteinCountText;
     public GameObject threatPrefab;
     public int timeToProteinIncrement = 1;
-    public int timeToThreatSpawn = 1;
+    public int startTimeToThreatSpawn = 1;
     public int startThreatDifficult = 1;
-    private readonly Func<int, int> difficultyCurve = i => 5 * i;
+    public int pointsForDestruction = 15;
+    private readonly Func<int, int> difficultyCurve = i => 2 * i;
+    private readonly Func<int, int> spawnTimeCurve = i => i;
     private readonly List<GameObject> threats = new List<GameObject>();
     private SizeF fieldSize;
     private int proteinIncrementCounter;
     private IEnumerator<int> threatDifficult;
     private int threatSpawnCounter;
+    private IEnumerator<int> timeToThreatSpawn;
     public List<int> ThreatsWithAntiBodiesCodes { get; } = new List<int>();
     public GameObject ActiveThreat { get; private set; }
     public int ProteinPoints { get; set; }
+    private int GamePoints { get; set; }
 
     private void Start()
     {
@@ -34,10 +38,13 @@ public class GameController : MonoBehaviour
             var fieldHorizontalRadius = Camera.main.orthographicSize;
             fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
         }
-        
-        threatDifficult = GetThreatDifficult(startThreatDifficult);
 
-        threatSpawnCounter = timeToThreatSpawn;
+        threatDifficult = GetNextCurveValue(startThreatDifficult, difficultyCurve);
+        threatDifficult.MoveNext();
+        timeToThreatSpawn = GetNextCurveValue(startTimeToThreatSpawn, spawnTimeCurve);
+        timeToThreatSpawn.MoveNext();
+
+        threatSpawnCounter = startTimeToThreatSpawn;
         ProteinPoints = startProteinCount;
         InvokeRepeating(nameof(TimerTick), 0, 1);
     }
@@ -47,8 +54,25 @@ public class GameController : MonoBehaviour
         proteinCountText.text = ProteinPoints.ToString();
     }
 
+    private void TimerTick()
+    {
+        ThreatSpawnControl();
+        ProteinIncrementControl();
+    }
+
+    private void ProteinIncrementControl()
+    {
+        proteinIncrementCounter++;
+        if (proteinIncrementCounter >= timeToProteinIncrement)
+        {
+            proteinIncrementCounter = 0;
+            ProteinPoints++;
+        }
+    }
+
     public void ThreatDeath(GameObject threat)
     {
+        GamePoints += pointsForDestruction;
         threats.Remove(threat);
         if (ActiveThreat == threat)
             ActiveThreat = null;
@@ -62,39 +86,31 @@ public class GameController : MonoBehaviour
         ActiveThreat = threat;
     }
 
-    #region TimerTick()
-
-    private void TimerTick()
+    private IEnumerator<int> GetNextCurveValue(int start, Func<int, int> curve)
     {
-        ThreatSpawnControl();
-        ProteinIncrementControl();
+        var value = start;
+        while (true)
+        {
+            yield return curve(value);
+            value++;
+            if (value == int.MaxValue) yield break;
+        }
     }
+
+    #region SpawnThreat()
 
     private void ThreatSpawnControl()
     {
         if (threats.Count >= maxThreatsCount) return;
 
         threatSpawnCounter++;
-        if (threatSpawnCounter >= timeToThreatSpawn)
+        if (threatSpawnCounter >= timeToThreatSpawn.Current)
         {
             threatSpawnCounter = 0;
             SpawnThreat();
+            timeToThreatSpawn.MoveNext();
         }
     }
-
-    private void ProteinIncrementControl()
-    {
-        proteinIncrementCounter++;
-        if (proteinIncrementCounter >= timeToProteinIncrement)
-        {
-            proteinIncrementCounter = 0;
-            ProteinPoints++;
-        }
-    }
-
-    #endregion
-
-    #region SpawnThreat()
 
     private void SpawnThreat()
     {
@@ -105,10 +121,10 @@ public class GameController : MonoBehaviour
             threats.Add(newThreat);
             newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
             var newData = new ThreatData();
-            threatDifficult.MoveNext();
             newThreat.GetComponent<Threat>()
                 .ThreatInitialize(newData, threatDifficult.Current, threatDifficult.Current,
                     ThreatsWithAntiBodiesCodes.Contains(newData.Code));
+            threatDifficult.MoveNext();
             lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
         }
     }
@@ -133,18 +149,6 @@ public class GameController : MonoBehaviour
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
-    }
-
-
-    private IEnumerator<int> GetThreatDifficult(int startDifficult)
-    {
-        var difficult = startDifficult;
-        while (true)
-        {
-            yield return difficultyCurve(difficult);
-            difficult++;
-            if (difficult == int.MaxValue) yield break;
-        }
     }
 
     #endregion
