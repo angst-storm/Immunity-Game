@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,20 +10,28 @@ using Random = UnityEngine.Random;
 public class GameController : MonoBehaviour
 {
     public int startProteinCount;
-    public int maxThreatsCount = 5;
+    public int timeToProteinIncrement = 1;
+    public int timeToTemperatureDecrement = 1;
+    public double temperatureIncrement = 0.5;
+    public double temperatureDecrement = 0.1;
+    public double gameOverTemperature = 40;
+    public int startThreatDifficult = 1;
+    public int startTimeToThreatSpawn = 1;
     public float minThreatsDistance = 2;
+    public int maxThreatsCount = 5;
+    public int pointsForDestruction = 15;
     public GameObject lymphnode;
     public Text proteinCountText;
+    public Text temperatureText;
     public GameObject threatPrefab;
-    public int timeToProteinIncrement = 1;
-    public int startTimeToThreatSpawn = 1;
-    public int startThreatDifficult = 1;
-    public int pointsForDestruction = 15;
     private readonly Func<int, int> difficultyCurve = i => 2 * i;
     private readonly Func<int, int> spawnTimeCurve = i => i;
     private readonly List<GameObject> threats = new List<GameObject>();
+    private double currentTemperature = 36.6;
     private SizeF fieldSize;
+    private bool onPause;
     private int proteinIncrementCounter;
+    private int temperatureDecrementCounter;
     private IEnumerator<int> threatDifficult;
     private int threatSpawnCounter;
     private IEnumerator<int> timeToThreatSpawn;
@@ -33,6 +42,8 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        
         {
             if (Camera.main == null) throw new NullReferenceException();
             var fieldHorizontalRadius = Camera.main.orthographicSize;
@@ -52,12 +63,28 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         proteinCountText.text = "x" + ProteinPoints;
+        temperatureText.text = $"{currentTemperature: 0.0}";
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (onPause)
+            {
+                onPause = false;
+                Time.timeScale = 1;
+            }
+            else
+            {
+                onPause = true;
+                Time.timeScale = 0;
+            }
+        }
     }
 
     private void TimerTick()
     {
         ThreatSpawnControl();
         ProteinIncrementControl();
+        TemperatureControl();
     }
 
     private void ProteinIncrementControl()
@@ -68,6 +95,30 @@ public class GameController : MonoBehaviour
             proteinIncrementCounter = 0;
             ProteinPoints++;
         }
+    }
+
+    private void TemperatureControl()
+    {
+        if (currentTemperature >= gameOverTemperature) GameOver();
+        if (currentTemperature <= 36.6)
+        {
+            currentTemperature = 36.6;
+            temperatureDecrementCounter = 0;
+            return;
+        }
+
+        temperatureDecrementCounter++;
+        if (temperatureDecrementCounter >= timeToTemperatureDecrement)
+        {
+            temperatureDecrementCounter = 0;
+            currentTemperature -= temperatureDecrement;
+            currentTemperature = Math.Round(currentTemperature, 1);
+        }
+    }
+
+    public void RaiseTheTemperature()
+    {
+        currentTemperature += temperatureIncrement;
     }
 
     public void ThreatDeath(GameObject threat)
@@ -95,6 +146,11 @@ public class GameController : MonoBehaviour
             value++;
             if (value == int.MaxValue) yield break;
         }
+    }
+
+    private void GameOver()
+    {
+        print("its all");
     }
 
     #region SpawnThreat()

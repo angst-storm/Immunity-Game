@@ -69,6 +69,14 @@ public class Threat : MonoBehaviour
         }
     }
 
+    public void TimerFine()
+    {
+        Controller.RaiseTheTemperature();
+        foreach (var unit in AttackUnits)
+            Destroy(unit);
+        Controller.ThreatDeath(gameObject);
+    }
+
     private void OnMouseDown()
     {
         ActivateThreat();
