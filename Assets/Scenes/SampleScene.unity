@@ -290,7 +290,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2
+  m_Text: 1
 --- !u!222 &12376199
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1772,7 +1772,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 568962702}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529337}
+        m_TargetAssemblyTypeName: Lymphnode, Assembly-CSharp
+        m_MethodName: SendUnit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &568962702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1892,7 +1904,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 600148742}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529337}
+        m_TargetAssemblyTypeName: Lymphnode, Assembly-CSharp
+        m_MethodName: SendUnit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &600148742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2696,7 +2720,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2
+  m_Text: 1
 --- !u!222 &863410213
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3109,7 +3133,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1013614403}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529337}
+        m_TargetAssemblyTypeName: Lymphnode, Assembly-CSharp
+        m_MethodName: SendUnit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1013614403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3608,7 +3644,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1318381619}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529337}
+        m_TargetAssemblyTypeName: Lymphnode, Assembly-CSharp
+        m_MethodName: SendUnit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1318381619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4214,7 +4262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 0}
+  m_AnchoredPosition: {x: 10, y: 0}
   m_SizeDelta: {x: 65, y: 40}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1525660916
@@ -4250,7 +4298,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: x128
+  m_Text: x0
 --- !u!222 &1525660917
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4895,7 +4943,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2
+  m_Text: 1
 --- !u!222 &1706547096
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5389,7 +5437,7 @@ MonoBehaviour:
   maxThreatsCount: 5
   minThreatsDistance: 2
   lymphnode: {fileID: 4529336}
-  proteinCountText: {fileID: 1409130221}
+  proteinCountText: {fileID: 1525660916}
   threatPrefab: {fileID: 4308581511132130697, guid: 81117eba8998f164b995d758a1606d75, type: 3}
   timeToProteinIncrement: 1
   startTimeToThreatSpawn: 1
@@ -5632,7 +5680,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1974079765}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529337}
+        m_TargetAssemblyTypeName: Lymphnode, Assembly-CSharp
+        m_MethodName: SendUnit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1974079765
 MonoBehaviour:
   m_ObjectHideFlags: 0

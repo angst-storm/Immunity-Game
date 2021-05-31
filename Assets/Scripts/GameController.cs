@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        proteinCountText.text = ProteinPoints.ToString();
+        proteinCountText.text = "x" + ProteinPoints;
     }
 
     private void TimerTick()
