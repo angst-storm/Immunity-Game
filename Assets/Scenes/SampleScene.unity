@@ -4240,7 +4240,7 @@ GameObject:
   - component: {fileID: 1525660917}
   - component: {fileID: 1525660916}
   m_Layer: 5
-  m_Name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E"
+  m_Name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0431\u0435\u043B\u043A\u0430"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4609,7 +4609,7 @@ GameObject:
   - component: {fileID: 1568180366}
   - component: {fileID: 1568180365}
   m_Layer: 5
-  m_Name: Text
+  m_Name: "\u0422\u0435\u043C\u043F\u0435\u0440\u0430\u0442\u0443\u0440\u0430"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5434,15 +5434,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startProteinCount: 100
-  maxThreatsCount: 5
+  timeToProteinIncrement: 1
+  timeToTemperatureDecrement: 1
+  temperatureIncrement: 0.5
+  temperatureDecrement: 0.1
+  gameOverTemperature: 40
+  startThreatDifficult: 1
+  startTimeToThreatSpawn: 1
   minThreatsDistance: 2
+  maxThreatsCount: 5
+  pointsForDestruction: 15
   lymphnode: {fileID: 4529336}
   proteinCountText: {fileID: 1525660916}
+  temperatureText: {fileID: 1568180365}
   threatPrefab: {fileID: 4308581511132130697, guid: 81117eba8998f164b995d758a1606d75, type: 3}
-  timeToProteinIncrement: 1
-  startTimeToThreatSpawn: 1
-  startThreatDifficult: 1
-  pointsForDestruction: 15
 --- !u!1 &1965209277
 GameObject:
   m_ObjectHideFlags: 0
