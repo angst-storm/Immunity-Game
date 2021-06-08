@@ -361,6 +361,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bar
       objectReference: {fileID: 0}
+    - target: {fileID: 1932133469081773989, guid: f53895d8f7ab6d94ca315e981106f451, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3950963573865407641, guid: f53895d8f7ab6d94ca315e981106f451, type: 3}
       propertyPath: m_RootOrder
       value: 0

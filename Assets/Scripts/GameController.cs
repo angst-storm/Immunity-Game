@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -24,12 +25,17 @@ public class GameController : MonoBehaviour
     public Text proteinCountText;
     public Text temperatureText;
     public GameObject threatPrefab;
+    public bool plotMode;
+    public Canvas canvas;
+    public GameObject messagePrefab;
+    public UIManagerScript sizeChanger;
     private readonly Func<int, int> difficultyCurve = i => 2 * i;
     private readonly Func<int, int> spawnTimeCurve = i => i;
     private readonly List<GameObject> threats = new List<GameObject>();
     private double currentTemperature = 36.6;
     private SizeF fieldSize;
     private bool onPause;
+    private IEnumerator<Action> plotActionsEnumerator;
     private int proteinIncrementCounter;
     private int temperatureDecrementCounter;
     private IEnumerator<int> threatDifficult;
@@ -43,13 +49,12 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-        
+        if (plotMode) InitializePlot();
         {
             if (Camera.main == null) throw new NullReferenceException();
             var fieldHorizontalRadius = Camera.main.orthographicSize;
             fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
         }
-
         threatDifficult = GetNextCurveValue(startThreatDifficult, difficultyCurve);
         threatDifficult.MoveNext();
         timeToThreatSpawn = GetNextCurveValue(startTimeToThreatSpawn, spawnTimeCurve);
@@ -82,9 +87,18 @@ public class GameController : MonoBehaviour
 
     private void TimerTick()
     {
-        ThreatSpawnControl();
         ProteinIncrementControl();
         TemperatureControl();
+
+        if (!plotMode)
+            ThreatSpawnControl();
+        else
+            PlotControl();
+    }
+
+    private void PlotControl()
+    {
+        if (plotActionsEnumerator.MoveNext()) plotActionsEnumerator.Current?.Invoke();
     }
 
     private void ProteinIncrementControl()
@@ -150,7 +164,25 @@ public class GameController : MonoBehaviour
 
     private void GameOver()
     {
-        print("its all");
+        DisplayMessage("Game Over!", 0, 0, () => sizeChanger.ChangeScene(0));
+    }
+
+    private void InitializePlot()
+    {
+        var plotActions = new List<Action>
+        {
+            () => SpawnThreat(new Vector2(0, 2), new ThreatData(0, "Я твоя первая ранка", ThreatType.Wound), 1)
+        };
+        plotActionsEnumerator = plotActions.GetEnumerator();
+    }
+
+    private void DisplayMessage(string message, float x, float y, UnityAction buttonAction)
+    {
+        var obj = Instantiate(messagePrefab, canvas.transform);
+        obj.GetComponentInChildren<Text>().text = message;
+        obj.transform.localPosition = new Vector3(x, y);
+        obj.GetComponentInChildren<Button>().onClick.AddListener(buttonAction);
+        Time.timeScale = 0;
     }
 
     #region SpawnThreat()
@@ -173,16 +205,20 @@ public class GameController : MonoBehaviour
         Vector2 spawnPoint = default;
         if (TryGetSpawnPoint(ref spawnPoint, 100))
         {
-            var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
-            threats.Add(newThreat);
-            newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
-            var newData = new ThreatData();
-            newThreat.GetComponent<Threat>()
-                .ThreatInitialize(newData, threatDifficult.Current, threatDifficult.Current,
-                    ThreatsWithAntiBodiesCodes.Contains(newData.Code));
+            SpawnThreat(spawnPoint, new ThreatData(), threatDifficult.Current);
             threatDifficult.MoveNext();
-            lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
         }
+    }
+
+    private void SpawnThreat(Vector2 spawnPoint, ThreatData data, int difficult)
+    {
+        var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
+        threats.Add(newThreat);
+        newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
+        newThreat.GetComponent<Threat>()
+            .ThreatInitialize(data, difficult, threatDifficult.Current,
+                ThreatsWithAntiBodiesCodes.Contains(data.Code));
+        lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
     }
 
     private bool TryGetSpawnPoint(ref Vector2 spawnPoint, int spawnTryCount)
