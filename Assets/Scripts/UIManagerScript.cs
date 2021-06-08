@@ -5,6 +5,7 @@ public class UIManagerScript : MonoBehaviour
 {
     public void ChangeScene(int sceneIndex)
     {
+        Time.timeScale = 1;
         switch (sceneIndex)
         {
             case 1:
