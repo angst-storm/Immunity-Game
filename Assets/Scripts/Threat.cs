@@ -65,6 +65,7 @@ public class Threat : MonoBehaviour
         {
             foreach (var unit in AttackUnits)
                 Destroy(unit);
+            Controller.FirstThreatWin = true;
             Controller.ThreatDeath(gameObject);
         }
     }
@@ -82,7 +83,7 @@ public class Threat : MonoBehaviour
         ActivateThreat();
     }
 
-    private void ActivateThreat()
+    public void ActivateThreat()
     {
         Controller.ActivateThreat(gameObject);
         GetComponent<SpriteRenderer>().sprite = activeSprite;

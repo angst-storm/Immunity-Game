@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,14 +10,55 @@ public class PlotController : MonoBehaviour
     public Canvas canvas;
     public GameController gameController;
     public GameObject messagePrefab;
+    public Button neutrophil;
+    public Button nkCell;
+    public Button macrophage;
+    public Button dendriticCell;
+    public Button tKiller;
     private GameObject messageObject;
+    private bool temperatureHasRisen;
 
     public IEnumerable<Action> PlotActions()
     {
+        neutrophil.interactable = false;
+        nkCell.interactable = false;
+        macrophage.interactable = false;
+        dendriticCell.interactable = false;
+        tKiller.interactable = false;
+
         yield return InnateImmunityInfo(LymphnodeInfo(ProteinInfo()));
-        yield return () =>
-            gameController.SpawnThreat(new Vector2(2, -2), new ThreatData(0, "Первая ранка", ThreatType.Wound), 1);
-        yield return WoundInfo(NeutrophilInfo());
+
+        foreach (var action in ThreatKillingCycle(
+            () => gameController.SpawnThreat(new Vector2(2, -2), new ThreatData(0, "Первая ранка", ThreatType.Wound),
+                1),
+            WoundInfo(NeutrophilInfo())))
+            yield return action;
+
+        yield return NkCellInfo();
+
+        foreach (var action in ThreatKillingCycle(
+            () => gameController.SpawnThreat(new Vector2(2, 2), new ThreatData(1, "Первый вирус", ThreatType.Virus), 1),
+            VirusInfo()))
+            yield return action;
+
+        if (!temperatureHasRisen) yield return TemperatureInfo();
+
+        yield return AcquiredImmunityInfo();
+
+        yield return () => gameController.SpawnThreat(new Vector2(-2, -2),
+            new ThreatData(2, "Второй вирус", ThreatType.Virus), 1);
+
+        yield return AntiBodiesAction(MacrophageInfo(DendriticCellInfo()));
+
+        while (gameController.ThreatsWithAntiBodiesCodes.Count == 0)
+            if (gameController.Threats.Count == 0)
+                yield return () => gameController.SpawnThreat(new Vector2(-2, -2),
+                    new ThreatData(2, "Второй вирус", ThreatType.Virus), 1);
+            else
+                yield return () => { };
+
+        yield return KillerInfo();
+        yield return () => gameController.plotMode = false;
     }
 
     private void ShowMessage(string message, float x, float y, Color color, UnityAction buttonAction)
@@ -78,7 +120,12 @@ public class PlotController : MonoBehaviour
                         -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), () =>
                             ShowMessage(
                                 "Классификация раневых инфекций: инфекция раны, околораневой абсцесс, раневая флегмона, гнойный затек, свищ, тромбофлебит, лимфангит и лимфаденит.",
-                                -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), neutrophilInfo)));
+                                -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), () =>
+                                {
+                                    gameController.Threats.FirstOrDefault()?.GetComponent<Threat>().ActivateThreat();
+                                    neutrophil.interactable = true;
+                                    neutrophilInfo();
+                                })));
     }
 
     private UnityAction NeutrophilInfo()
@@ -93,5 +140,128 @@ public class PlotController : MonoBehaviour
                             ShowMessage(
                                 "Воспалённые или повреждённые участки соединительной ткани требуют немедленной миграции нейтрофилов в очаг повреждения для удаления патогенных микроорганизмов и восстановления ткани.",
                                 50, -65, new Color(0.93f, 0.38f, 0.38f, 1), HideMessage)));
+    }
+
+    private Action TemperatureInfo()
+    {
+        return () =>
+            ShowMessage("Температура поднимается", 30, 190, new Color(0.6f, 0.6f, 0.6f, 1), HideMessage);
+    }
+
+    private Action NkCellInfo()
+    {
+        nkCell.interactable = true;
+        return () =>
+            ShowMessage(
+                "Натуральные киллеры – это тип Т-киллеров, участвующий в функционировании врождённого иммунитета.",
+                50, -120, new Color(0.27f, 0.40f, 0.80f, 1), () =>
+                    ShowMessage(
+                        "NK-клетки клетки находят и убивают раковые клетки и клетки, пораженные вирусами",
+                        50, -120, new Color(0.27f, 0.40f, 0.80f, 1), HideMessage));
+    }
+
+    private Action VirusInfo()
+    {
+        return () =>
+            ShowMessage(
+                "Вирус — неклеточный инфекционный агент, который может воспроизводиться только внутри клеток.",
+                -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                    ShowMessage(
+                        "Примерами наиболее известных вирусных заболеваний человека могут служить простуда, грипп, ветряная оспа и простой герпес.",
+                        -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                            ShowMessage(
+                                "Хотя вирусы подрывают нормальный гомеостаз (саморегуляция), приводя к заболеванию, они могут существовать внутри организма и относительно безвредно. Некоторые вирусы могут пребывать внутри тела человека в состоянии покоя.",
+                                -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), HideMessage)));
+    }
+
+    private Action AcquiredImmunityInfo()
+    {
+        return () => ShowMessage(
+            "Приобретённый иммунитет — это способность организма обезвреживать чужеродные и потенциально опасные микроорганизмы, которые уже попадали в организм ранее.",
+            0, 0, new Color(0.36f, 0.70f, 0.38f, 1), () => ShowMessage(
+                "Реакция организма индивидуальна для каждого «врага», поэтому «арсенал» приобретенного иммунитета зависит от того, с какими инфекциями человек сталкивался в жизни и какие прививки делал.",
+                0, 0, new Color(0.36f, 0.70f, 0.38f, 1), HideMessage));
+    }
+
+    private Action AntiBodiesAction(UnityAction macrophageInfo)
+    {
+        return () =>
+            ShowMessage(
+                "Антитела́ — крупные глобулярные белки плазмы крови, выделяющиеся плазматическими клетками иммунной системы и предназначенные для нейтрализации клеток патогенов (бактерий, грибов, многоклеточных паразитов) и вирусов.",
+                -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                    ShowMessage(
+                        "Каждое антитело распознаёт уникальный элемент патогена, отсутствующий в самом организме, — антиген.",
+                        -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                            ShowMessage(
+                                "Антитела поступают в кровь, разносятся по всему организму и связываются со всеми проникшими бактериями, вызывая их гибель.",
+                                -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                                {
+                                    macrophage.interactable = true;
+                                    macrophageInfo();
+                                })));
+    }
+
+    private UnityAction MacrophageInfo(UnityAction dendriticCellInfo)
+    {
+        return () =>
+            ShowMessage(
+                "Макрофаги — это клетки в организме человека, способные к активному захвату и перевариванию бактерий, остатков погибших клеток и других чужеродных или токсичных для организма частиц.",
+                50, 35, new Color(0.49f, 0.78f, 0.85f, 1), () =>
+                    ShowMessage(
+                        "Макрофаг знакомит другие клетки иммунной системы с кусочками переваренного микроба, что позволяет организму лучше бороться с инфекцией.",
+                        50, 35, new Color(0.49f, 0.78f, 0.85f, 1), () =>
+                            ShowMessage(
+                                "Макрофаги присутствуют практически в каждом органе и ткани, где они выступают в качестве первой линии иммунной защиты от патогенов и играют важную роль в поддержании тканевого гомеостаза (саморегуляции).",
+                                50, 35, new Color(0.49f, 0.78f, 0.85f, 1), () =>
+                                {
+                                    dendriticCell.interactable = true;
+                                    dendriticCellInfo();
+                                })));
+    }
+
+    private UnityAction DendriticCellInfo()
+    {
+        return () => ShowMessage(
+            "Дендритные клетки",
+            50, -10, new Color(0.87f, 0.58f, 0.76f, 1), HideMessage);
+    }
+
+    private Action KillerInfo()
+    {
+        return () =>
+            ShowMessage(
+                "Т-лимфоциты так названы, потому что после образования в костном мозге дозревают в вилочковой железе — тимусе.",
+                50, -165, new Color(0.19f, 0.53f, 0.47f, 1), () =>
+                {
+                    tKiller.interactable = true;
+                    ShowMessage(
+                        "Есть три подвида Т-лимфоцитов: Т-киллеры, Т-хелперы и Т-супрессоры",
+                        50, -165, new Color(0.19f, 0.53f, 0.47f, 1), () =>
+                            ShowMessage(
+                                "Т-киллеры могут убивать зараженные вирусами клетки, чтобы остановить развитие инфекции.",
+                                50, -165, new Color(0.19f, 0.53f, 0.47f, 1), HideMessage));
+                });
+    }
+
+    private IEnumerable<Action> ThreatKillingCycle(Action spawnThreat, Action info)
+    {
+        gameController.FirstThreatWin = false;
+        yield return spawnThreat;
+        yield return info;
+        while (!gameController.FirstThreatWin)
+            if (gameController.Threats.Count == 0)
+            {
+                if (!temperatureHasRisen)
+                {
+                    temperatureHasRisen = true;
+                    yield return TemperatureInfo();
+                }
+
+                yield return spawnThreat;
+            }
+            else
+            {
+                yield return () => { };
+            }
     }
 }

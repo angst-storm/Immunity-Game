@@ -2057,6 +2057,11 @@ MonoBehaviour:
   canvas: {fileID: 884777940}
   gameController: {fileID: 1965088609}
   messagePrefab: {fileID: 8159204044504075182, guid: 5f8bb78faac99c647897905778a80039, type: 3}
+  neutrophil: {fileID: 1974079764}
+  nkCell: {fileID: 568962701}
+  macrophage: {fileID: 600148741}
+  dendriticCell: {fileID: 1318381618}
+  tKiller: {fileID: 1013614402}
 --- !u!4 &848853804
 Transform:
   m_ObjectHideFlags: 0
@@ -3749,7 +3754,7 @@ MonoBehaviour:
   startProteinCount: 100
   timeToProteinIncrement: 1
   timeToTemperatureDecrement: 1
-  temperatureIncrement: 20
+  temperatureIncrement: 0.5
   temperatureDecrement: 0.1
   gameOverTemperature: 40
   startThreatDifficult: 1

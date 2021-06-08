@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
     public PlotController plotController;
     private readonly Func<int, int> difficultyCurve = i => 2 * i;
     private readonly Func<int, int> spawnTimeCurve = i => i;
-    private readonly List<GameObject> threats = new List<GameObject>();
+    public readonly List<GameObject> Threats = new List<GameObject>();
     private double currentTemperature = 36.6;
     private SizeF fieldSize;
     private bool onPause;
@@ -38,10 +38,11 @@ public class GameController : MonoBehaviour
     private IEnumerator<int> threatDifficult;
     private int threatSpawnCounter;
     private IEnumerator<int> timeToThreatSpawn;
-    public List<int> ThreatsWithAntiBodiesCodes { get; } = new List<int>();
+    public HashSet<int> ThreatsWithAntiBodiesCodes { get; } = new HashSet<int>();
     public GameObject ActiveThreat { get; private set; }
     public int ProteinPoints { get; set; }
     private int GamePoints { get; set; }
+    public bool FirstThreatWin { get; set; } = false;
 
     private void Start()
     {
@@ -135,7 +136,7 @@ public class GameController : MonoBehaviour
     public void ThreatDeath(GameObject threat)
     {
         GamePoints += pointsForDestruction;
-        threats.Remove(threat);
+        Threats.Remove(threat);
         if (ActiveThreat == threat)
             ActiveThreat = null;
         Destroy(threat);
@@ -168,7 +169,7 @@ public class GameController : MonoBehaviour
 
     private void ThreatSpawnControl()
     {
-        if (threats.Count >= maxThreatsCount) return;
+        if (Threats.Count >= maxThreatsCount) return;
 
         threatSpawnCounter++;
         if (threatSpawnCounter >= timeToThreatSpawn.Current)
@@ -192,7 +193,7 @@ public class GameController : MonoBehaviour
     public void SpawnThreat(Vector2 spawnPoint, ThreatData data, int difficult)
     {
         var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
-        threats.Add(newThreat);
+        Threats.Add(newThreat);
         newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
         newThreat.GetComponent<Threat>()
             .ThreatInitialize(data, difficult, threatDifficult.Current,
@@ -216,7 +217,7 @@ public class GameController : MonoBehaviour
 
     private bool IsSuitableSpawnPoint(Vector2 spawnPoint)
     {
-        return threats
+        return Threats
             .Select(t => (Vector2) t.transform.position)
             .Concat(new[] {(Vector2) transform.position})
             .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
