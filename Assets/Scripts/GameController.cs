@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -26,9 +25,7 @@ public class GameController : MonoBehaviour
     public Text temperatureText;
     public GameObject threatPrefab;
     public bool plotMode;
-    public Canvas canvas;
-    public GameObject messagePrefab;
-    public UIManagerScript sizeChanger;
+    public PlotController plotController;
     private readonly Func<int, int> difficultyCurve = i => 2 * i;
     private readonly Func<int, int> spawnTimeCurve = i => i;
     private readonly List<GameObject> threats = new List<GameObject>();
@@ -49,7 +46,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-        if (plotMode) InitializePlot();
+        if (plotMode) plotActionsEnumerator = plotController.PlotActions().GetEnumerator();
         {
             if (Camera.main == null) throw new NullReferenceException();
             var fieldHorizontalRadius = Camera.main.orthographicSize;
@@ -164,25 +161,7 @@ public class GameController : MonoBehaviour
 
     private void GameOver()
     {
-        DisplayMessage("Game Over!", 0, 0, () => sizeChanger.ChangeScene(0));
-    }
-
-    private void InitializePlot()
-    {
-        var plotActions = new List<Action>
-        {
-            () => SpawnThreat(new Vector2(0, 2), new ThreatData(0, "Я твоя первая ранка", ThreatType.Wound), 1)
-        };
-        plotActionsEnumerator = plotActions.GetEnumerator();
-    }
-
-    private void DisplayMessage(string message, float x, float y, UnityAction buttonAction)
-    {
-        var obj = Instantiate(messagePrefab, canvas.transform);
-        obj.GetComponentInChildren<Text>().text = message;
-        obj.transform.localPosition = new Vector3(x, y);
-        obj.GetComponentInChildren<Button>().onClick.AddListener(buttonAction);
-        Time.timeScale = 0;
+        print("its all");
     }
 
     #region SpawnThreat()
@@ -210,7 +189,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void SpawnThreat(Vector2 spawnPoint, ThreatData data, int difficult)
+    public void SpawnThreat(Vector2 spawnPoint, ThreatData data, int difficult)
     {
         var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
         threats.Add(newThreat);
