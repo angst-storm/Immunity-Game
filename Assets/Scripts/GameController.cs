@@ -42,10 +42,11 @@ public class GameController : MonoBehaviour
     public GameObject ActiveThreat { get; private set; }
     public int ProteinPoints { get; set; }
     private int GamePoints { get; set; }
-    public bool FirstThreatWin { get; set; } = false;
+    public bool FirstThreatWin { get; set; }
 
     private void Start()
     {
+        plotMode = LearnLaunch.Learn;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         if (plotMode) plotActionsEnumerator = plotController.PlotActions().GetEnumerator();
         {

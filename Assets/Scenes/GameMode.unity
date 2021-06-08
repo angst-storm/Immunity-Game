@@ -3766,7 +3766,7 @@ MonoBehaviour:
   proteinCountText: {fileID: 1525660916}
   temperatureText: {fileID: 1568180365}
   threatPrefab: {fileID: 4308581511132130697, guid: 81117eba8998f164b995d758a1606d75, type: 3}
-  plotMode: 1
+  plotMode: 0
   plotController: {fileID: 848853803}
 --- !u!1 &1966004606
 GameObject:
