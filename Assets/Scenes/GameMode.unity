@@ -2062,6 +2062,7 @@ MonoBehaviour:
   macrophage: {fileID: 600148741}
   dendriticCell: {fileID: 1318381618}
   tKiller: {fileID: 1013614402}
+  lymphode: {fileID: 4529336}
 --- !u!4 &848853804
 Transform:
   m_ObjectHideFlags: 0
