@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
     public GameObject threatPrefab;
     public bool plotMode;
     public PlotController plotController;
-    private readonly Func<int, int> difficultyCurve = i => 2 * i;
+    private readonly Func<int, int> difficultyCurve = i => 1;
     private readonly Func<int, int> spawnTimeCurve = i => i;
     public readonly List<GameObject> Threats = new List<GameObject>();
     private double currentTemperature = 36.6;
@@ -183,10 +183,16 @@ public class GameController : MonoBehaviour
 
     private void SpawnThreat()
     {
-        Vector2 spawnPoint = default;
-        if (TryGetSpawnPoint(ref spawnPoint, 100))
+        var acceptablePoints =
+            PathData.Paths.Keys
+                .Except(Threats
+                    .Select(t => t.GetComponent<Threat>().PathData.PathPoints
+                        .Last()))
+                .ToList();
+        if (acceptablePoints.Any())
         {
-            SpawnThreat(spawnPoint, new ThreatData(), threatDifficult.Current);
+            SpawnThreat(acceptablePoints[Random.Range(0, acceptablePoints.Count)], new ThreatData(),
+                threatDifficult.Current);
             threatDifficult.MoveNext();
         }
     }
@@ -194,35 +200,12 @@ public class GameController : MonoBehaviour
     public void SpawnThreat(Vector2 spawnPoint, ThreatData data, int difficult)
     {
         var newThreat = Instantiate(threatPrefab, spawnPoint, new Quaternion());
-        Threats.Add(newThreat);
         newThreat.GetComponent<Threat>().Controller = gameObject.GetComponent<GameController>();
         newThreat.GetComponent<Threat>()
             .ThreatInitialize(data, difficult, threatDifficult.Current,
                 ThreatsWithAntiBodiesCodes.Contains(data.Code));
         lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
+        Threats.Add(newThreat);
     }
-
-    private bool TryGetSpawnPoint(ref Vector2 spawnPoint, int spawnTryCount)
-    {
-        for (var i = 0; i < spawnTryCount; i++)
-        {
-            var tryPoint = spawnPoint = new Vector2(Random.Range(-fieldSize.Width / 2 + 1, fieldSize.Width / 2 - 1),
-                Random.Range(-fieldSize.Height / 2 + 1, fieldSize.Height / 2 - 1));
-            if (!IsSuitableSpawnPoint(tryPoint)) continue;
-            spawnPoint = tryPoint;
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsSuitableSpawnPoint(Vector2 spawnPoint)
-    {
-        return Threats
-            .Select(t => (Vector2) t.transform.position)
-            .Concat(new[] {(Vector2) transform.position})
-            .All(p => (spawnPoint - p).magnitude >= minThreatsDistance);
-    }
-
     #endregion
 }

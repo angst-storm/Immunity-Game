@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 8011623367219871527, guid: a67aa8c0156d34b4bb4f6b89deb289c4, type: 3}
-  controller: {fileID: 1965088607}
+  controller: {fileID: 1965088609}
 --- !u!212 &4529338
 SpriteRenderer:
   m_ObjectHideFlags: 0

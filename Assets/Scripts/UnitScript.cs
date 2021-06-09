@@ -75,7 +75,7 @@ public class UnitScript : MonoBehaviour
         targetThreat = threat;
         var threatScript = targetThreat.GetComponent<Threat>();
         threatScript.AttackUnits.Add(gameObject);
-        path = threatScript.PathData.PathsPoints.GetEnumerator();
+        path = threatScript.PathData.PathPoints.GetEnumerator();
         if (path.MoveNext())
             currentTarget = path.Current;
         initialized = true;

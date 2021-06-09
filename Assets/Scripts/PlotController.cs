@@ -29,7 +29,7 @@ public class PlotController : MonoBehaviour
         yield return InnateImmunityInfo(LymphnodeInfo(ProteinInfo()));
 
         foreach (var action in ThreatKillingCycle(
-            () => gameController.SpawnThreat(new Vector2(2, -2), new ThreatData(0, "Первая ранка", ThreatType.Wound),
+            () => gameController.SpawnThreat(new Vector2(3, -1.5f), new ThreatData(0, "Первая ранка", ThreatType.Wound),
                 1),
             WoundInfo(NeutrophilInfo())))
             yield return action;
@@ -37,7 +37,7 @@ public class PlotController : MonoBehaviour
         yield return NkCellInfo();
 
         foreach (var action in ThreatKillingCycle(
-            () => gameController.SpawnThreat(new Vector2(2, 2), new ThreatData(1, "Первый вирус", ThreatType.Virus), 1),
+            () => gameController.SpawnThreat(new Vector2(1.5f, 3), new ThreatData(1, "Первый вирус", ThreatType.Virus), 1),
             VirusInfo()))
             yield return action;
 
@@ -45,14 +45,14 @@ public class PlotController : MonoBehaviour
 
         yield return AcquiredImmunityInfo();
 
-        yield return () => gameController.SpawnThreat(new Vector2(-2, -2),
+        yield return () => gameController.SpawnThreat(new Vector2(-4.5f, -1.5f),
             new ThreatData(2, "Второй вирус", ThreatType.Virus), 1);
 
         yield return AntiBodiesAction(MacrophageInfo(DendriticCellInfo()));
 
         while (gameController.ThreatsWithAntiBodiesCodes.Count == 0)
             if (gameController.Threats.Count == 0)
-                yield return () => gameController.SpawnThreat(new Vector2(-2, -2),
+                yield return () => gameController.SpawnThreat(new Vector2(-4.5f, -1.5f),
                     new ThreatData(2, "Второй вирус", ThreatType.Virus), 1);
             else
                 yield return () => { };
@@ -114,13 +114,13 @@ public class PlotController : MonoBehaviour
         return () =>
             ShowMessage(
                 "Раны, при которых повреждены только кожа и слизистые оболочки, называются поверхностными. Если повреждение распространяется на расположенные глубже, то раны считаются глубокими.",
-                -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), () =>
+                -80, -125, new Color(0.98f, 0.86f, 0.69f, 1), () =>
                     ShowMessage(
                         "Все раны (кроме операционных) первично загрязнены микробами. Однако развитие инфекционного процесса в организме наблюдается не при всех ранениях.",
-                        -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), () =>
+                        -80, -125, new Color(0.98f, 0.86f, 0.69f, 1), () =>
                             ShowMessage(
                                 "Классификация раневых инфекций: инфекция раны, околораневой абсцесс, раневая флегмона, гнойный затек, свищ, тромбофлебит, лимфангит и лимфаденит.",
-                                -130, -110, new Color(0.98f, 0.86f, 0.69f, 1), () =>
+                                -80, -125, new Color(0.98f, 0.86f, 0.69f, 1), () =>
                                 {
                                     gameController.Threats.FirstOrDefault()?.GetComponent<Threat>().ActivateThreat();
                                     neutrophil.interactable = true;
@@ -145,7 +145,7 @@ public class PlotController : MonoBehaviour
     private Action TemperatureInfo()
     {
         return () =>
-            ShowMessage("Температура поднимается", 30, 190, new Color(0.6f, 0.6f, 0.6f, 1), HideMessage);
+            ShowMessage("Температура поднимается", 30, 187, new Color(0.6f, 0.6f, 0.6f, 1), HideMessage);
     }
 
     private Action NkCellInfo()
@@ -165,13 +165,13 @@ public class PlotController : MonoBehaviour
         return () =>
             ShowMessage(
                 "Вирус — неклеточный инфекционный агент, который может воспроизводиться только внутри клеток.",
-                -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                -145, 115, new Color(0.36f, 0.70f, 0.38f, 1), () =>
                     ShowMessage(
                         "Примерами наиболее известных вирусных заболеваний человека могут служить простуда, грипп, ветряная оспа и простой герпес.",
-                        -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                        -145, 115, new Color(0.36f, 0.70f, 0.38f, 1), () =>
                             ShowMessage(
                                 "Хотя вирусы подрывают нормальный гомеостаз (саморегуляция), приводя к заболеванию, они могут существовать внутри организма и относительно безвредно. Некоторые вирусы могут пребывать внутри тела человека в состоянии покоя.",
-                                -130, 110, new Color(0.36f, 0.70f, 0.38f, 1), HideMessage)));
+                                -145, 115, new Color(0.36f, 0.70f, 0.38f, 1), HideMessage)));
     }
 
     private Action AcquiredImmunityInfo()
@@ -188,13 +188,13 @@ public class PlotController : MonoBehaviour
         return () =>
             ShowMessage(
                 "Антитела́ — крупные глобулярные белки плазмы крови, выделяющиеся плазматическими клетками иммунной системы и предназначенные для нейтрализации клеток патогенов (бактерий, грибов, многоклеточных паразитов) и вирусов.",
-                -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                10, -130, new Color(0.36f, 0.70f, 0.38f, 1), () =>
                     ShowMessage(
                         "Каждое антитело распознаёт уникальный элемент патогена, отсутствующий в самом организме, — антиген.",
-                        -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                        10, -130, new Color(0.36f, 0.70f, 0.38f, 1), () =>
                             ShowMessage(
                                 "Антитела поступают в кровь, разносятся по всему организму и связываются со всеми проникшими бактериями, вызывая их гибель.",
-                                -100, -160, new Color(0.36f, 0.70f, 0.38f, 1), () =>
+                                10, -130, new Color(0.36f, 0.70f, 0.38f, 1), () =>
                                 {
                                     macrophage.interactable = true;
                                     macrophageInfo();
