@@ -67,7 +67,7 @@ public class PlotController : MonoBehaviour
     private void ShowMessage(string message, float x, float y, Color color, UnityAction buttonAction)
     {
         HideMessage();
-        Time.timeScale = 0;
+        UIManagerScript.PauseGame = true;
         messageObject = Instantiate(messagePrefab, new Vector3(0, 0, 0), new Quaternion(), canvas.transform);
         messageObject.GetComponentInChildren<Text>().text = message;
         messageObject.GetComponentInChildren<Button>().onClick.AddListener(buttonAction);
@@ -78,7 +78,7 @@ public class PlotController : MonoBehaviour
     private void HideMessage()
     {
         Destroy(messageObject);
-        Time.timeScale = 1;
+        UIManagerScript.PauseGame = false;
     }
 
     private Action InnateImmunityInfo(UnityAction lymphnodeInfo)
