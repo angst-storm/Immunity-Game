@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        plotMode = LearnLaunch.learn;
+        plotMode = UIManagerScript.learn;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         if (plotMode) plotActionsEnumerator = plotController.PlotActions().GetEnumerator();
         threatDifficult = GetNextCurveValue(startThreatDifficult, difficultyCurve);
