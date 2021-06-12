@@ -9,10 +9,10 @@ public class UIManagerScript : MonoBehaviour
         switch (sceneIndex)
         {
             case 1:
-                LearnLaunch.Learn = false;
+                LearnLaunch.learn = false;
                 break;
             case 2:
-                LearnLaunch.Learn = true;
+                LearnLaunch.learn = true;
                 sceneIndex--;
                 break;
         }

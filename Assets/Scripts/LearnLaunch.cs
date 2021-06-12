@@ -1,4 +1,4 @@
 ﻿public static class LearnLaunch
 {
-    public static bool Learn = false;
+    public static bool learn = false;
 }

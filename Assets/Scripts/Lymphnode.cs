@@ -8,7 +8,7 @@ public class Lymphnode : MonoBehaviour
 
     public void BuildPath(GameObject threat)
     {
-        var pathDates = controller.Threats.Select(t => t.GetComponent<Threat>().PathData).ToList();
+        var pathDates = controller.threats.Select(t => t.GetComponent<Threat>().PathData).ToList();
         var pathData = new PathData(threat.transform.position, pathDates);
         threat.GetComponent<Threat>().PathData = pathData;
         var lineRenderer = threat.GetComponent<LineRenderer>();

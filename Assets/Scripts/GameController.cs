@@ -17,7 +17,6 @@ public class GameController : MonoBehaviour
     public double gameOverTemperature = 40;
     public int startThreatDifficult = 1;
     public int startTimeToThreatSpawn = 1;
-    public float minThreatsDistance = 2;
     public int maxThreatsCount = 5;
     public int pointsForDestruction = 15;
     public GameObject lymphnode;
@@ -28,9 +27,8 @@ public class GameController : MonoBehaviour
     public PlotController plotController;
     private readonly Func<int, int> difficultyCurve = i => 1;
     private readonly Func<int, int> spawnTimeCurve = i => i;
-    public readonly List<GameObject> Threats = new List<GameObject>();
+    public readonly List<GameObject> threats = new List<GameObject>();
     private double currentTemperature = 36.6;
-    private SizeF fieldSize;
     private bool onPause;
     private IEnumerator<Action> plotActionsEnumerator;
     private int proteinIncrementCounter;
@@ -46,14 +44,9 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        plotMode = LearnLaunch.Learn;
+        plotMode = LearnLaunch.learn;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         if (plotMode) plotActionsEnumerator = plotController.PlotActions().GetEnumerator();
-        {
-            if (Camera.main == null) throw new NullReferenceException();
-            var fieldHorizontalRadius = Camera.main.orthographicSize;
-            fieldSize = new SizeF((int) (fieldHorizontalRadius * 2), (int) (fieldHorizontalRadius * 2));
-        }
         threatDifficult = GetNextCurveValue(startThreatDifficult, difficultyCurve);
         threatDifficult.MoveNext();
         timeToThreatSpawn = GetNextCurveValue(startTimeToThreatSpawn, spawnTimeCurve);
@@ -137,7 +130,7 @@ public class GameController : MonoBehaviour
     public void ThreatDeath(GameObject threat)
     {
         GamePoints += pointsForDestruction;
-        Threats.Remove(threat);
+        threats.Remove(threat);
         if (ActiveThreat == threat)
             ActiveThreat = null;
         Destroy(threat);
@@ -170,7 +163,7 @@ public class GameController : MonoBehaviour
 
     private void ThreatSpawnControl()
     {
-        if (Threats.Count >= maxThreatsCount) return;
+        if (threats.Count >= maxThreatsCount) return;
 
         threatSpawnCounter++;
         if (threatSpawnCounter >= timeToThreatSpawn.Current)
@@ -185,7 +178,7 @@ public class GameController : MonoBehaviour
     {
         var acceptablePoints =
             PathData.Paths.Keys
-                .Except(Threats
+                .Except(threats
                     .Select(t => t.GetComponent<Threat>().PathData.PathPoints
                         .Last()))
                 .ToList();
@@ -205,7 +198,7 @@ public class GameController : MonoBehaviour
             .ThreatInitialize(data, difficult, threatDifficult.Current,
                 ThreatsWithAntiBodiesCodes.Contains(data.Code));
         lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
-        Threats.Add(newThreat);
+        threats.Add(newThreat);
     }
     #endregion
 }
