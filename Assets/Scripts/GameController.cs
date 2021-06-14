@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
@@ -27,13 +26,19 @@ public class GameController : MonoBehaviour
     public PlotController plotController;
     public AudioSource threatWin;
     public AudioSource threatDefeat;
-    private readonly Func<int, int> difficultyCurve = i => 1;
-    private readonly Func<int, int> spawnTimeCurve = i => i;
+    public double difficultyK = 1;
+    public double difficultyA = 1;
+    public double difficultyM = 1;
+    public double spawnTimeK = 1;
+    public double spawnTimeA = 1;
+    public double spawnTimeM = 1;
     public readonly List<GameObject> threats = new List<GameObject>();
     private double currentTemperature = 36.6;
+    private Func<int, int> difficultyCurve;
     private bool onPause;
     private IEnumerator<Action> plotActionsEnumerator;
     private int proteinIncrementCounter;
+    private Func<int, int> spawnTimeCurve = i => (int) (i > 50 ? 1 : -0.08 * i + 5);
     private int temperatureDecrementCounter;
     private IEnumerator<int> threatDifficult;
     private int threatSpawnCounter;
@@ -49,8 +54,18 @@ public class GameController : MonoBehaviour
         plotMode = UIManagerScript.learn;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         if (plotMode) plotActionsEnumerator = plotController.PlotActions().GetEnumerator();
+        difficultyCurve = x =>
+        {
+            var result = (int) (difficultyK * Math.Pow(x, difficultyA) + difficultyM);
+            return result < 1 ? 1 : result;
+        };
         threatDifficult = GetNextCurveValue(startThreatDifficult, difficultyCurve);
         threatDifficult.MoveNext();
+        spawnTimeCurve = x =>
+        {
+            var result = (int) (spawnTimeK * Math.Pow(x, spawnTimeA) + spawnTimeM);
+            return result < 1 ? 1 : result;
+        };
         timeToThreatSpawn = GetNextCurveValue(startTimeToThreatSpawn, spawnTimeCurve);
         timeToThreatSpawn.MoveNext();
 
@@ -202,5 +217,6 @@ public class GameController : MonoBehaviour
         lymphnode.GetComponent<Lymphnode>().BuildPath(newThreat);
         threats.Add(newThreat);
     }
+
     #endregion
 }

@@ -3567,15 +3567,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea089cc4af67840439752989e83a2d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startProteinCount: 100
+  startProteinCount: 25
   timeToProteinIncrement: 1
   timeToTemperatureDecrement: 1
-  temperatureIncrement: 0.5
+  temperatureIncrement: 1
   temperatureDecrement: 0.1
   gameOverTemperature: 40
   startThreatDifficult: 1
   startTimeToThreatSpawn: 1
-  maxThreatsCount: 5
+  maxThreatsCount: 6
   pointsForDestruction: 15
   lymphnode: {fileID: 4529336}
   proteinCountText: {fileID: 1525660916}
@@ -3585,6 +3585,12 @@ MonoBehaviour:
   plotController: {fileID: 848853803}
   threatWin: {fileID: 1965088612}
   threatDefeat: {fileID: 1965088611}
+  difficultyK: 0.33
+  difficultyA: 1
+  difficultyM: 0
+  spawnTimeK: -0.08
+  spawnTimeA: 1
+  spawnTimeM: 5
 --- !u!82 &1965088610
 AudioSource:
   m_ObjectHideFlags: 0
