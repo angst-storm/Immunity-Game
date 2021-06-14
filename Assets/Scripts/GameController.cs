@@ -25,6 +25,8 @@ public class GameController : MonoBehaviour
     public GameObject threatPrefab;
     public bool plotMode;
     public PlotController plotController;
+    public AudioSource threatWin;
+    public AudioSource threatDefeat;
     private readonly Func<int, int> difficultyCurve = i => 1;
     private readonly Func<int, int> spawnTimeCurve = i => i;
     public readonly List<GameObject> threats = new List<GameObject>();

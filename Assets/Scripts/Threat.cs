@@ -66,6 +66,7 @@ public class Threat : MonoBehaviour
             foreach (var unit in AttackUnits)
                 Destroy(unit);
             Controller.FirstThreatWin = true;
+            Controller.threatWin.PlayOneShot(Controller.threatWin.clip);
             Controller.ThreatDeath(gameObject);
         }
     }
@@ -75,6 +76,7 @@ public class Threat : MonoBehaviour
         Controller.RaiseTheTemperature();
         foreach (var unit in AttackUnits)
             Destroy(unit);
+        Controller.threatDefeat.PlayOneShot(Controller.threatDefeat.clip);
         Controller.ThreatDeath(gameObject);
     }
 
