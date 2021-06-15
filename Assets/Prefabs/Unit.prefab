@@ -122,7 +122,7 @@ MonoBehaviour:
   dendriticCellSprite: {fileID: 21300000, guid: 53e7ff396499da345aeb07145507e0ad, type: 3}
   neutrophilSprite: {fileID: 21300000, guid: a68b33a9932b8864ab76e7dd5258b9b1, type: 3}
   nKCellSprite: {fileID: 21300000, guid: 404aba4a1eedf3f4cbd4dcf3da7d0039, type: 3}
-  tKiller: {fileID: 21300000, guid: 5139b9c72901d5644adb96e6a48f50f3, type: 3}
+  tKillerSprite: {fileID: 21300000, guid: 5139b9c72901d5644adb96e6a48f50f3, type: 3}
 --- !u!82 &6647993279504617158
 AudioSource:
   m_ObjectHideFlags: 0
