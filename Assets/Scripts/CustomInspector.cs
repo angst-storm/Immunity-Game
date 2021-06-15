@@ -74,5 +74,8 @@ public class CustomInspector : Editor
         gc.plotController =
             (PlotController) EditorGUILayout.ObjectField("Контроллер сюжета", gc.plotController, typeof(PlotController),
                 true);
+        gc.uiManager =
+            (UIManagerScript) EditorGUILayout.ObjectField("Переключатель сцен", gc.uiManager, typeof(UIManagerScript),
+                true);
     }
 }

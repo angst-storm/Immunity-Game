@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     public GameObject threatPrefab;
     public bool plotMode;
     public PlotController plotController;
+    public UIManagerScript uiManager;
     public AudioSource threatWin;
     public AudioSource threatDefeat;
     public double difficultyK = 1;
@@ -173,7 +174,8 @@ public class GameController : MonoBehaviour
 
     private void GameOver()
     {
-        print("its all");
+        plotController.ShowMessage($"Вы проиграли! Ваш счет: {GamePoints}", 0, 0, Color.red,
+            () => uiManager.ChangeScene(0));
     }
 
     #region SpawnThreat()

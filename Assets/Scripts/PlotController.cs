@@ -64,7 +64,7 @@ public class PlotController : MonoBehaviour
         yield return () => gameController.plotMode = false;
     }
 
-    private void ShowMessage(string message, float x, float y, Color color, UnityAction buttonAction)
+    public void ShowMessage(string message, float x, float y, Color color, UnityAction buttonAction)
     {
         HideMessage();
         UIManagerScript.PauseGame = true;
