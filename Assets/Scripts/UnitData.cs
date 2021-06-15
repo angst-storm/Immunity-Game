@@ -8,8 +8,8 @@
         Cost = cost;
     }
 
-    public int LifeDamage { get; }
-    public int AntiBodyDamage { get; }
-    public int Speed { get; }
-    public int Cost { get; }
+    public int LifeDamage { get; set; }
+    public int AntiBodyDamage { get; set;}
+    public int Speed { get; set;}
+    public int Cost { get; set;}
 }

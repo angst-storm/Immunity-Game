@@ -27,7 +27,7 @@ public class UnitScript : MonoBehaviour
     public Sprite dendriticCellSprite;
     public Sprite neutrophilSprite;
     public Sprite nKCellSprite;
-    public Sprite tKiller;
+    public Sprite tKillerSprite;
     private Vector2 currentTarget;
     private bool initialized;
     private IEnumerator<Vector2> path;
@@ -68,7 +68,7 @@ public class UnitScript : MonoBehaviour
             UnitSpecies.DendriticCell => dendriticCellSprite,
             UnitSpecies.Neutrophil => neutrophilSprite,
             UnitSpecies.NkCell => nKCellSprite,
-            UnitSpecies.Killer => tKiller,
+            UnitSpecies.Killer => tKillerSprite,
             _ => throw new ArgumentOutOfRangeException(nameof(unit), unit, null)
         };
         UnitData = UnitsCharacteristics[unit];
