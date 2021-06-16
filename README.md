@@ -21,9 +21,9 @@
 * итоговый продукт: мобильное устройство на платформе Android
 
 Порядок установки:
-* Игрового проекта в Unity: 1. клонировать репозиторий на устройство 2. запустить проект при помощи Unity Editor 2020.3.11f1
-* Готового продукта:
-1. Скачать архив с репозиторием проекта ([Альтернативная ссылка для скачивания релизных версий игр](https://drive.google.com/drive/folders/1Np2BZmZUngdZfRTd_wgIHvwyy-XmiwUy?usp=sharing))
+* Игрового проекта в Unity: 1. клонировать репозиторий на устройство 
+2. запустить проект при помощи Unity Editor 2020.3.11f1
+* Готового продукта: 1. Скачать архив с репозиторием проекта ([Альтернативная ссылка для скачивания релизных версий игр](https://drive.google.com/drive/folders/1Np2BZmZUngdZfRTd_wgIHvwyy-XmiwUy?usp=sharing))
 2. Версия для Android: файл ImmunityGame Release 1.0 Android.apk
 3. Версия для PC: папка ImmunityGame Release 1.0 PC -> файл Immunity Game.exe
 
